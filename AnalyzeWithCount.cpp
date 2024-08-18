@@ -1,3 +1,4 @@
+// include llvm APIs
 #include "llvm/IR/Function.h"
 #include "llvm/IR/InstVisitor.h"
 #include "llvm/Passes/PassBuilder.h"
@@ -8,6 +9,7 @@
 
 using namespace llvm;
 
+// anonymous namespaces so that it does not clash with existing modules of llvm
 namespace {
 struct ComputationalIntensityOpcodeCounterPass
     : public PassInfoMixin<ComputationalIntensityOpcodeCounterPass>,
@@ -17,6 +19,8 @@ struct ComputationalIntensityOpcodeCounterPass
   unsigned int MemoryOps = 0;
   std::map<StringRef, unsigned> OpcodeMap;
 
+  // starting point of my custom pass
+  // each function in the test file passes thru this
   PreservedAnalyses run(Function &F, FunctionAnalysisManager &) {
     ArithmeticOps = 0;
     MemoryOps = 0;
@@ -51,7 +55,9 @@ struct ComputationalIntensityOpcodeCounterPass
     }
     errs() << "-------------------------------------------------\n\n";
 
-    return PreservedAnalyses::all(); // preserve all original analyses
+    return PreservedAnalyses::all(); // preserve all original analyses so that
+                                     // no modifications are made in the
+                                     // original functions
   }
 
   // visitor method for binary operations (arithmetic operations)
@@ -65,7 +71,7 @@ struct ComputationalIntensityOpcodeCounterPass
       ArithmeticOps++;
     }
 
-    // track all opcodes
+    // track and count all opcodes
     trackOpcode(I);
   }
 
@@ -104,6 +110,8 @@ llvm::PassPluginLibraryInfo getComputationalIntensityOpcodeCounterPluginInfo() {
             PB.registerPipelineParsingCallback(
                 [](StringRef Name, FunctionPassManager &FPM,
                    ArrayRef<PassBuilder::PipelineElement>) {
+                  // if the tool is invoked with the following flag, start
+                  // parsing all functions from the file passed as argument
                   if (Name == "analyze-computational-intensity-opcode") {
                     FPM.addPass(ComputationalIntensityOpcodeCounterPass());
                     return true;
