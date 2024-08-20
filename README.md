@@ -6,29 +6,7 @@ This project provides a custom static analyzer built using the LLVM infrastructu
 
 Follow these steps to build and run the tool:
 
-### 1. Clone the LLVM Project
-
-First, clone the LLVM Git repository into a directory named `ast-analyzer`:
-
-```bash
-mkdir -p ~/ast-analyzer
-cd ~/ast-analyzer
-git clone https://github.com/llvm/llvm-project.git
-```
-
-### 2. Set Up the Clang Tools Extra Directory
-
-The tool is built as part of the clang-tools-extra directory in llvm-project. Clone the custom analyzer into this directory and `cd` into it:
-
-```bash
-cd ~/ast-analyzer/llvm-project/clang-tools-extra/
-git clone https://github.com/gauravhegade/computational-intensity-analyzer.git
-cd computational-intensity-analyzer
-```
-
-### 3. Build and Run the Tool
-
-Use the following commands to build and run the tool:
+### Build and Run the Tool
 
 1. Generate the LLVM IR for your test file:
 
