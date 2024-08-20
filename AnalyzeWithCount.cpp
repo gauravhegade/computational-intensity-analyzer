@@ -29,10 +29,12 @@ struct ComputationalIntensityOpcodeCounterPass
 
     double IntensityRatio =
         (MemoryOps == 0) ? ArithmeticOps : (double)ArithmeticOps / MemoryOps;
-    double IntensityThreshold = 1.0;
+    double IntensityThreshold = -1.0;
 
     // output computational intensity analysis
     errs() << "\nFunction '" << F.getName() << "' analysis:\n";
+    errs() << "Total Number of  Instructions in this Functions are: "
+           << F.getInstructionCount() << '\n';
     errs() << " - Arithmetic Ops: " << ArithmeticOps << "\n";
     errs() << " - Memory Ops: " << MemoryOps << "\n";
     errs() << " - Intensity Ratio: " << IntensityRatio << "\n";
@@ -66,6 +68,7 @@ struct ComputationalIntensityOpcodeCounterPass
         I.getOpcode() == Instruction::Sub ||
         I.getOpcode() == Instruction::Mul ||
         I.getOpcode() == Instruction::FAdd ||
+        I.getOpcode() == Instruction::FDiv ||
         I.getOpcode() == Instruction::FSub ||
         I.getOpcode() == Instruction::FMul) {
       ArithmeticOps++;
